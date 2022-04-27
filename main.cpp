@@ -10,6 +10,31 @@
 #include <fstream>
 #include <vector>
 using namespace std;
+void if_file(){
+    string filename, response;
+    // get from the user file name
+    cout << "please enter the file name with it's extension like .txt";
+    cin >> filename;
+    ifstream file(filename);
+    // if it's a real file it will open else, so he put a wrong file name
+    if(! (file.is_open()) ){
+        cout << "you enter invalid name for file, if you want to create a file with this name press 1, if you want to return to enter file name enter 2." << endl;
+        // to enter a valid response 1 or 2
+        while(true) {
+            cout << "what's your response : ";
+            cin >> response;
+            if (response == "1") {
+                // i will create to him a txt file with this name
+                break;
+            } else if (response == "2") {
+                // i will make him to enter file name again
+                if_file();
+            } else {
+                cout << "please enter 1 or 2 only" << endl;
+            }
+        }
+    }
+}
 // function to put all the words in file in vector
 vector <string> make_file_vector(string filename){
     vector <string> file_words;
