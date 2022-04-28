@@ -10,10 +10,10 @@
 #include <fstream>
 #include <vector>
 using namespace std;
-void if_file(){
+string if_file(){
     string filename, response;
     // get from the user file name
-    cout << "please enter the file name with it's extension like .txt";
+    cout << "please enter the file name with it's extension like .txt : ";
     cin >> filename;
     ifstream file(filename);
     // if it's a real file it will open else, so he put a wrong file name
@@ -25,14 +25,18 @@ void if_file(){
             cin >> response;
             if (response == "1") {
                 // i will create to him a txt file with this name
+                return filename;
                 break;
             } else if (response == "2") {
                 // i will make him to enter file name again
                 if_file();
+                break;
             } else {
                 cout << "please enter 1 or 2 only" << endl;
             }
         }
+    } else{
+        return filename;
     }
 }
 // function to put all the words in file in vector
@@ -103,14 +107,59 @@ bool is_found(vector<string> words,string search_word){
         }
     }
 }
-// function to count the number of words in the file
-int num_words(vector <string>words){
-    int words_num;
-    for(string word:words){
-        words_num += 1;
+// function to remove spaces and breaklines from vector
+vector<string> remove_S_B(vector<string> vect){
+    vector<string> vect2;
+    string word1;
+    for (string word:vect) {
+        if (!((word == " ") or (word == "\n") or (word == ""))) {
+            for (int i = 0; i < word.length(); ++i) {
+                if (!((word[i] == ' ') or (word[i] == '\n') or (word == ""))) {
+                    word1 += word[i];
+                }
+            }
+            vect2.push_back(word1);
+            word1 = "";
+        }
     }
-    return words_num;
+    return vect2;
+}
+// function to count the number of words in the file
+int num_words(vector <string>vect){
+    vector <string> words = remove_S_B(vect);
+    cout << words<< endl;
+    //int words_num;
+//    for(string word:words){
+//        words_num += 1;
+//    }
+    return words.size();
+}
+// function to merge two vectors and add them to the first vector and return it
+vector<string> merge_vectors(vector<string> file1, vector<string> file2){
+    vector<string> merge_file;
+    for (string word:file1) {
+        merge_file.push_back(word);
+    }
+    for (string word:file2) {
+        merge_file.push_back(word);
+    }
+    file1.clear();
+    for (string word:merge_file) {
+        file1.push_back(word);
+    }
+    return file1;
+}
+// function to merge two files
+vector<string> merge_files(vector<string> file1){
+    cout << "we need second file" << endl;
+    string filename2 = if_file();
+    vector <string> file2 = make_file_vector(filename2);
+    file1 =  merge_vectors(file1,file2);
+    return file1;
 }
 int main() {
+    string filename = if_file();
+    vector <string> vect = make_file_vector(filename);
+    cout << "number of words is --> "<< num_words(vect) << endl;
     return 0;
 }
