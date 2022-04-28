@@ -157,9 +157,39 @@ vector<string> merge_files(vector<string> file1){
     file1 =  merge_vectors(file1,file2);
     return file1;
 }
+// function to return number of characters in the file
+int num_char(vector<string> vect){
+    int char_num = 0;
+    for (string word:vect) {
+        if (! ( (word == "") or (word == "\n") ) ) {
+            for (int i = 0; i < word.length(); ++i) {
+                if (!(word[i] == '\n')){
+                    char_num += 1;
+                }
+            }
+        }
+    }
+    return char_num;
+}
+// function to return number of lines in the file
+int num_lines(vector<string> vect){
+    int lines_num = 0;
+    if(!(vect.empty())) {
+        for (string word: vect) {
+            if (word == "\n") {
+                lines_num += 1;
+            }
+        }
+        lines_num += 1;
+        return lines_num;
+    }
+    else{
+        return lines_num;
+    }
+}
 int main() {
     string filename = if_file();
     vector <string> vect = make_file_vector(filename);
-    cout << "number of words is --> "<< num_words(vect) << endl;
+    cout << "number of words is --> "<< num_lines(vect) << endl;
     return 0;
 }
