@@ -9,7 +9,9 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
 using namespace std;
+// function to get from the user right input as file name and if he want to create new file with the same name
 string if_file(){
     string filename, response;
     // get from the user file name
@@ -24,7 +26,18 @@ string if_file(){
             cout << "what's your response : ";
             cin >> response;
             if (response == "1") {
-                // i will create to him a txt file with this name
+                // create a new file with extension txt
+                if (filename.find(".txt") != string::npos) {
+                    ofstream file;
+                    file.open(filename, ios::app);
+                    file.close();
+                }
+                else{
+                    filename += ".txt";
+                    ofstream file;
+                    file.open(filename, ios::app);
+                    file.close();
+                }
                 return filename;
                 break;
             } else if (response == "2") {
@@ -187,9 +200,41 @@ int num_lines(vector<string> vect){
         return lines_num;
     }
 }
+// function to empty the vector
+vector<string> empty_vector(vector<string>vect){
+    vect.clear();
+    return vect;
+}
+// function to display all the content in the file by print the vector content
+void display_file(vector<string>vect){
+    for (string word:vect) {
+        cout << word;
+    }
+    cout << endl;
+}
+// function to make user append to the file from the console
+void append_file(string filename){
+    string line;
+    char ch;
+    fstream file;
+    file.open(filename, ios::in | ios ::out | ios :: app);
+    if(file.is_open()){
+        bool cond = file.eof();
+        cout << "please enter what you want to append to the file and to stop writen press control z (^z) ";
+        while(!cond){
+            // to add every char in console to file
+            cin.get(ch);
+            file << ch;
+            file.flush();
+            // to stop when enter ^z
+            if (ch == 26){
+                break;
+            }
+        }
+    }
+    file.close();
+}
 int main() {
-    string filename = if_file();
-    vector <string> vect = make_file_vector(filename);
-    cout << "number of words is --> "<< num_lines(vect) << endl;
+    append_file("mario.txt");
     return 0;
 }
