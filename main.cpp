@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <string.h>
 using namespace std;
 string if_file(){
     string filename, response;
@@ -168,13 +169,23 @@ vector<string> first_upper_file(vector<string> words){
     }
     return words;
 }
+int num_times_word(vector<string> words, string word_find){
+    int num = 0;
+    for (string word:words) {
+        if(strstr(word.c_str(),word_find.c_str())){
+            num += 1;
+        }
+    }
+    return num;
+}
 int main() {
     string filename = if_file();
     vector<string> words =  make_file_vector(filename);
-    words = first_upper_file(words);
-    cout << "enter :";
-    cin >> filename;
-    make_vector_file(filename, words);
+    cout << num_times_word(words, "mario");
+//    words = first_upper_file(words);
+//    cout << "enter :";
+//    cin >> filename;
+//    make_vector_file(filename, words);
 
 }
 
