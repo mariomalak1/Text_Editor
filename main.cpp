@@ -1,6 +1,6 @@
 // FCAI – Programming 1 – 2022 - Assignment 4
 // Program Name: Text Editor.cpp
-// Last Modification Date: 1/5/2022.
+// Last Modification Date: 12/5/2022.
 // mario malak : 20210313, section 15, 16.
 // mahmoud sayed 20210370, section 15, 16.
 // kirolos osama 20210303, section 15, 16.
@@ -48,9 +48,6 @@ void take_response(){
         else if(response == "1"){
             vect = append_file(filename, vect);
         }
-        else if(response == "2"){
-            display_file(vect);
-        }
         else if(response == "3"){
             vect = empty_vector(vect);
             cout << "file is empty" << endl;
@@ -96,6 +93,9 @@ void take_response(){
         }
         else if(response == "s"){
             make_vector_file(vect, filename);
+        }
+        else if(response == "2"){
+            display_file(vect);
         }
         else{
             cout << "please enter valid response "<< endl;
