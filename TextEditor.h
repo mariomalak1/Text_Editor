@@ -1,6 +1,6 @@
 // FCAI – Programming 1 – 2022 - Assignment 4
 // Program Name: Text Editor.h
-// Last Modification Date: 1/5/2022.
+// Last Modification Date: 12/5/2022.
 // mario malak : 20210313, section 15, 16.
 // mahmoud sayed 20210370, section 15, 16.
 // kirolos osama 20210303, section 15, 16.
@@ -12,7 +12,7 @@
 #include <string>
 #include <string.h>
 using namespace std;
-// function to get from the user right input as file name and if he want to create new file with the same name
+// function to get from the user right input as file name and if he wants to create new file with the same name
 string if_file(){
     string filename, response;
     // get from the user file name
@@ -39,11 +39,11 @@ string if_file(){
                     file.open(filename, ios::app);
                     file.close();
                 }
-                cout << "file is created" << endl;
                 return filename;
             } else if (response == "2") {
-                // i will make him to enter file name again
-                if_file();
+                // will take him to enter file name again
+                // to make new filename is the new one that the user enter it
+                filename = if_file();
                 break;
             } else {
                 cout << "please enter 1 or 2 only" << endl;
@@ -74,11 +74,12 @@ vector <string> make_file_vector(string filename){
                     word = "";
                 }
             }
+            // to enter last word in the vector
             file_words.push_back(word);
             file_words.push_back("\n");
             word = "";
         }
-        // to delete last breakline in the vector
+        // to delete last break line in the vector
         file_words.pop_back();
         // to close the file
         file.close();
@@ -89,46 +90,55 @@ vector <string> make_file_vector(string filename){
     return file_words;
 }
 // function to put all words in vector to file
-void make_vector_file(vector <string> file_words ,string filename){
-    string response;
-    // to ask him if he want to save in the same file or in another one
-    cout << "if you want to save in the same file enter 1, if you want to save in another file enter 2" << endl;
-    while(true) {
-        cout << "what is your response : ";
-        cin >> response;
-        if (response == "1"){
-            break;
-        }
-        else if(response == "2"){
-            cin  >> filename;
-            if (filename.find(".txt") != string::npos) {
-                ofstream file;
-                file.open(filename, ios::app);
-                file.close();
+void make_vector_file(vector <string> file_words ,string filename , string response = "0"){
+    if (response == "0") {
+        // to ask him if he wants to save in the same file or in another one
+        cout << "if you want to save in the same file enter 1, if you want to save in another file enter 2" << endl;
+        while (true) {
+            cout << "what is your response : ";
+            cin >> response;
+            if (response == "1") {
+                break;
+            } else if (response == "2") {
+                another_file:
+                cout << "enter file name : ";
+                cin >> filename;
+                // to show that the extension is found or not
+                // if the extension is found, so it makes new file with this name
+                if (filename.find(".txt") != string::npos) {
+                    ofstream file;
+                    file.open(filename, ios::app);
+                    file.close();
+                } else { // else it makes file name with this name and plus the extension
+                    filename += ".txt";
+                    ofstream file;
+                    file.open(filename, ios::app);
+                    file.close();
+                }
+                break;
+            } else {
+                cout << "please enter valid response" << endl;
             }
-            else{
-                filename += ".txt";
-                ofstream file;
-                file.open(filename, ios::app);
-                file.close();
+        }
+        // iam make this to make the file save quickly without asking him to save him
+        to_goto:
+        ofstream file(filename);
+        // check that the file opened
+        if (file.is_open()) {
+            for (string word: file_words) {
+                // to write on the file
+                file << word;
             }
+            // to close the file
+            file.close();
+            cout << "file saved " << endl;
+        } else {
+            cout << "happen problem while saving the file" << endl;
         }
-        else{
-            cout << "please enter valid response" << endl;
-        }
-    }
-    ofstream file(filename);
-    // check that the file opened
-    if(file.is_open()){
-        for (string word:file_words) {
-            // to write on the file
-            file << word;
-        }
-        // to close the file
-        file.close();
-        cout << "file saved " << endl;
-    }else{
-        cout << "happen problem while saving the file" << endl;
+    }else if (response == "1") {
+        goto to_goto;
+    }else if (response == "2"){
+        goto another_file;
     }
 }
 // function to print to vector
@@ -154,7 +164,7 @@ int num_times_word(vector<string> words){
     }
     return num;
 }
-// function to remove spaces and breaklines from vector
+// function to remove spaces and break lines from vector
 vector<string> remove_S_B(vector<string> vect){
     vector<string> vect2;
     string word1;
@@ -255,29 +265,6 @@ vector<string> line_vector(string line) {
         word = "";
     }
     return words;
-}
-vector<string> append_file(string filename, vector<string> vect){
-    string all_words;
-    char ch;
-    fstream file;
-    // to append on the file
-    file.open(filename,  ios :: app);
-    bool cond = file.eof();
-    if(file.is_open()) {
-        cout << "please enter what you want to append to the file and to stop writen press control z (^z) to end of the line" << endl;
-        cout << "enter what you want to write it : ";
-        while (!cond) {
-            cin.get(ch);
-            if ((ch == 26) or (ch == '?')) {
-                break;
-            }
-            all_words += ch;
-        }
-        file << all_words;
-    }
-    file.close();
-    vect = make_file_vector(filename);
-    return vect;
 }
 // function to make string word encrypted by adding 1 to it's ascii code
 string encryption(string word){
@@ -408,7 +395,7 @@ vector<string> upper_file(vector<string> words){
     }
     return words;
 }
-// function to scearch for word if it found return true else return false --> 10
+// function to search for word if it found return true else return false --> 10
 void word_search(vector<string> words){
     string search_word;
     int count = 0;
@@ -426,4 +413,54 @@ void word_search(vector<string> words){
     if(count == words.size()){
         cout << "Word was not found in the file" << endl;
     }
+}
+// function to append to the file
+vector<string> append_file(string filename, vector<string> vect){
+    string response;
+    cout << "to make add text to this file it must save this file, so if you accept to save this file in the same file name enter 1, if you want to save it in another file enter 2, to exit from adding mode enter 3" << endl;
+    while(true){
+        cout << "what is your response : ";
+        cin >> response;
+        if ((response == "2") or (response == "1") or (response == "3")){
+            if (response == "2"){
+                // to save in another file
+                make_vector_file(vect, filename ,"2");
+                break;
+            } else if (response == "3"){
+                cout << "quit from adding mode" << endl;
+                return vect;
+            }
+        } else if (response == "1"){
+            make_vector_file(vect, filename ,"1");
+            break;
+        } else{
+            cout << "please enter valid response" << endl;
+        }
+    }
+    string all_words, words_file;
+    char ch;
+    fstream file;
+    // to append on the file
+    file.open(filename,  ios :: app);
+    bool cond = file.eof();
+    if(file.is_open()) {
+        cout << "please enter what you want to append to the file and to stop writen press control z (^z) to end of the line" << endl;
+        cout << "enter what you want to write it : ";
+        while (!cond) {
+            cin.get(ch);
+            if ((ch == 26)) {
+                break;
+            }
+            all_words += ch;
+        }
+        for (int i = 0; i < all_words.length(); i++){
+            if (!(i == 0)){
+                words_file += all_words[i];
+            }
+        }
+        file << words_file;
+    }
+    file.close();
+    vect = make_file_vector(filename);
+    return vect;
 }
